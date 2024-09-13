@@ -1,0 +1,24 @@
+=== SVEA Checkout Download Counter Plugin ===
+
+This WordPress plugin displays the total number of downloads for the SVEA Checkout plugin in a dashboard widget.
+
+== Installation ==
+
+1. Upload the 'svea-download-counter' folder to the **/wp-content/plugins/** directory.
+2. Activate the plugin through the **Plugins** menu in WordPress.
+
+== Usage ==
+
+Once activated, a widget will appear in the WordPress admin dashboard showing the total number of downloads for the SVEA Checkout plugin. 
+The widget updates automatically and caches data for one hour.
+
+== Code explanation ==
+
+- Fetching data: I used the WordPress API to retrieve infos about the SVEA checkout plugin.
+- Error Handling: The code includes checks for API response errors. If there is an issue with the API request (like connection failure or API error), an error message is displayed.
+- Display data: The data is displayed in a custom dashboard widget using 'wp_add_dashboard_widget()'.
+- Caching: The data is cached for one hour using the 'set_transient()' function to minimize API calls so to not decrease the performance of the website.
+- Security: The output is escaped using esc_html() to protect against potential security risks like cross-site scripting attacks, ensuring that the displayed content is safe.
+
+
+
