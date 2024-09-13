@@ -4,7 +4,7 @@ This WordPress plugin displays the total number of downloads for the SVEA Checko
 
 == Installation ==
 
-1. Upload the 'svea-download-counter' folder to the **/wp-content/plugins/** directory.
+1. You can install the plugin either via the WordPress admin panel using your web browser or manually by uploading it through FTP.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 
 == Usage ==
