@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: SVEA Checkout Downloads Counter
-Description: Create a widghet in the admin dashboard to show in real time the downloads of the SVEA WP-plugin.
+Description: Create a widghet in the admin dashboard to show the downloads of the SVEA WP-plugin.
 Version: 1.0
 Author: Gianluca
 */
 
 
-// Dashboard widget
+// Created a new dashboard widget
 add_action('wp_dashboard_setup', 'svea_add_dashboard_widget');
 
 function svea_add_dashboard_widget() {
@@ -19,16 +19,18 @@ function svea_add_dashboard_widget() {
 }
 
 function svea_dashboard_widget_display() {
+
+  
    // Check if the data is cached
     $transient_key = 'svea_download_count';
-    $plugin_data = get_transient($transient_key);
+     $total_downloads = get_transient($transient_key);
    
     // If it is cached
-    if ($plugin_data !== false) {
+    if ( $total_downloads !== false) {
 
         // Display cached data
-        echo '<p>Total Downloads: ' . $plugin_data->downloaded . '</p>';
-        echo '<p>Last updated: ' . $plugin_data->last_updated . '</p>';
+        echo '<p>Total Downloads: ' .  esc_html($total_downloads) . '</p>';
+   
 
     // If not cached
     } else {
@@ -38,20 +40,30 @@ function svea_dashboard_widget_display() {
 
         // Check the API response 
         if (is_wp_error($response)) {
-            echo '<p>Something went wrong, could not fetch the data.</p>';
-            return;
+            $error_message = $response->get_error_message();
+            echo '<p>Something went wrong: ' . esc_html($error_message) . '</p>';
+           return;
+        }
+
+        //Retrieve the request status code
+        $request_code = wp_remote_retrieve_response_code($response);
+        if($request_code !== 200){
+            echo '<p>Failed to fetch the data: HTTP code response: '. esc_html($request_code) .'</p>';
+            return ;
         }
 
         //  Retrieve the data and decode it in a php format
         $plugin_data = json_decode(wp_remote_retrieve_body($response));
+        $total_downloads = $plugin_data->downloaded;
+      
      
         // If downloaded has value
-        if (isset($plugin_data->downloaded)) {
-            echo '<p>Total Downloads: ' . $plugin_data->downloaded . '</p>';
-            echo '<p>Last updated: ' . $plugin_data->last_updated . '</p>';
+        if (isset( $total_downloads)) {
+            echo '<p>Total Downloads: ' .  esc_html($total_downloads) . '</p>';
+      
             
-         // Set a cache for the duration of 24h based on the time of update of the API(once a day)
-            set_transient($transient_key, $plugin_data, DAY_IN_SECONDS); 
+         // Set a cache for the duration of 1 hour
+            set_transient($transient_key,  $total_downloads,  3600); 
 
         //If not
         } else {
