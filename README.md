@@ -14,7 +14,7 @@ The widget updates automatically and caches data for one hour.
 
 == Code explanation ==
 
-- Fetching data: I used the WordPress API to retrieve info about the SVEA checkout plugin.
+- Fetching data: I used the WordPress.org API to retrieve info about the SVEA checkout plugin.
 - Error Handling: The code includes checks for API response errors. If there is an issue with the API request (like connection failure or API error), an error message is displayed.
 - Display data: The data is displayed in a custom dashboard widget using 'wp_add_dashboard_widget()'.
 - Caching: The data is cached for one hour using the 'set_transient()' function to minimize API calls so to not decrease the performance of the website.
